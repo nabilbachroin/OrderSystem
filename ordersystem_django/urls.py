@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from ordersystem_app.views import MenuBaksoViewSet, MinumanPojokJoyoViewSet, OrderListViewSet
+from ordersystem_app.views import MenuBaksoViewSet, MinumanPojokJoyoViewSet, OrderListViewSet, get_user_role
 
 router = routers.DefaultRouter()
 router.register(r'menubakso', MenuBaksoViewSet)
@@ -27,4 +27,5 @@ router.register(r'orderlist', OrderListViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/get_user_role/', get_user_role),
 ]

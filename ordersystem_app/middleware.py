@@ -16,3 +16,4 @@ class GetClientIpMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+

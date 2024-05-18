@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MenuBakso from '@/components/MenuBakso.vue';
 import OrderForm from '@/components/OrderForm.vue';
 import OrderList from '@/components/OrderList.vue';
+import Login from '@/components/Login.vue';
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     name: 'OrderList',
     component: OrderList
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  }
 ];
 
 const router = createRouter({

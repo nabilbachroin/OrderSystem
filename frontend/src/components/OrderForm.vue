@@ -12,7 +12,7 @@
       </div>
       <div>
         <label>Pesanan:</label>
-        <div v-for="(porsi, index) in order.porsis" :key="index">
+        <div v-for="(porsi, index) in order.porsi_details" :key="index">
           <select v-model="porsi.nama" @change="updateHarga">
             <option v-for="menu in menus" :key="menu.id" :value="menu.nama">{{ menu.nama }}</option>
           </select>
@@ -28,6 +28,7 @@
               <input type="checkbox" :value="detail.value" v-model="porsi.details" />
               <label>{{ detail.text }}</label>
             </div>
+            <input v-if="porsi.details.includes('lainnya')" type="text" v-model="porsi.lainnya" placeholder="Detail Lainnya" />
           </div>
           <button type="button" @click="removePorsi(index)">Hapus Porsi</button>
         </div>
@@ -59,7 +60,7 @@ export default {
       order: {
         nama: '',
         meja: '',
-        porsis: [],
+        porsi_details: [],
         harga: 0,
         pilihan: '',
       },
@@ -90,14 +91,14 @@ export default {
       }
     },
     addPorsi() {
-      this.order.porsis.push({ nama: '', kuah: '', details: [] });
+      this.order.porsi_details.push({ nama: '', kuah: '', details: [], lainnya: '' });
     },
     removePorsi(index) {
-      this.order.porsis.splice(index, 1);
+      this.order.porsi_details.splice(index, 1);
       this.updateHarga();
     },
     updateHarga() {
-      this.order.harga = this.order.porsis.reduce((total, porsi) => {
+      this.order.harga = this.order.porsi_details.reduce((total, porsi) => {
         const menu = this.menus.find(menu => menu.nama === porsi.nama);
         return total + (menu ? parseFloat(menu.harga) : 0);
       }, 0);

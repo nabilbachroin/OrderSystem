@@ -33,6 +33,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     'http://localhost:8080',  # yg ini bisa mungkin nnti untuk produksi
 # ]
 
+AUTH_USER_MODEL = 'ordersystem_app.CustomUser'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,7 +58,6 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
-
 
 
 MIDDLEWARE = [
