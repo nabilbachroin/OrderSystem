@@ -1,26 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <nav>
+      <router-link to="/menu-bakso">Lihat Menu Bakso</router-link>
+      <router-link to="/order-form">Buat Pesanan</router-link>
+      <router-link to="/order-list">Lihat Daftar Pesanan</router-link>
+    </nav>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: 'App'
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+nav {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+router-link {
+  text-decoration: none;
+  color: #007BFF;
+}
+
+router-link:hover {
+  text-decoration: underline;
 }
 </style>

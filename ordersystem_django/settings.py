@@ -27,6 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Saat Deployment kalau bisa jangan True, harus ada yang dibatasi
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8080',  # yg ini bisa mungkin nnti untuk produksi
+# ]
 
 # Application definition
 
@@ -40,6 +45,7 @@ INSTALLED_APPS = [
     'channels',
     'ordersystem_app',
     'rest_framework',
+    'corsheaders',
 ]
 
 # Tambahkan di settings.py
@@ -56,6 +62,8 @@ CHANNEL_LAYERS = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'ordersystem_app.middleware.GetClientIpMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
