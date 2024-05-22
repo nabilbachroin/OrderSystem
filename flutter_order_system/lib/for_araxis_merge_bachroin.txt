@@ -53,8 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _checkConnection() async {
     if (await Permission.location.request().isGranted) {
-      List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult[0] == ConnectivityResult.wifi) {
+      connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.wifi) {
         ssid = await WifiInfo().getWifiName() ?? 'Unknown';
         // ignore: avoid_print
         print('SSID: $ssid');
