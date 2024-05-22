@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Order System',
+      title: 'Bachroin Test', // Task Manager Title, Window Title, Screen Reader Title
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -44,14 +45,24 @@ class _MyHomePageState extends State<MyHomePage> {
   String connectionStatus = 'Unknown';
   String ssid = 'Unknown';
   late ConnectivityResult connectivityResult;
+  late Connectivity _connectivity;
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  bool _isRequestingPermission = false;
 
   @override
   void initState() {
     super.initState();
+    _connectivity = Connectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      _updateConnectionStatus(result[0]);
+    });
     _checkConnection();
   }
 
   Future<void> _checkConnection() async {
+    if (_isRequestingPermission) return;
+    _isRequestingPermission = true;
+
     if (await Permission.location.request().isGranted) {
       List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult[0] == ConnectivityResult.wifi) {
@@ -75,6 +86,18 @@ class _MyHomePageState extends State<MyHomePage> {
         connectionStatus = 'Permission denied';
       });
     }
+
+    _isRequestingPermission = false;
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    _checkConnection();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _openWiFiSettings() async {
@@ -99,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order System'),
+        title: const Text('Bachroin Test'),
       ),
       body: Center(
         child: Column(

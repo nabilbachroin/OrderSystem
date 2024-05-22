@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -44,16 +45,20 @@ class _MyHomePageState extends State<MyHomePage> {
   String connectionStatus = 'Unknown';
   String ssid = 'Unknown';
   late ConnectivityResult connectivityResult;
+  late Connectivity _connectivity;
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
+    _connectivity = Connectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _checkConnection();
   }
 
   Future<void> _checkConnection() async {
     if (await Permission.location.request().isGranted) {
-      connectivityResult = await Connectivity().checkConnectivity();
+      ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.wifi) {
         ssid = await WifiInfo().getWifiName() ?? 'Unknown';
         // ignore: avoid_print
@@ -75,6 +80,16 @@ class _MyHomePageState extends State<MyHomePage> {
         connectionStatus = 'Permission denied';
       });
     }
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    _checkConnection();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _openWiFiSettings() async {
