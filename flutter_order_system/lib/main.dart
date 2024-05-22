@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:wifi_iot/wifi_iot.dart';
+import 'package:wifi_info_flutter/wifi_info_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,9 +22,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
-        '/login': (context) => LoginPage(),
-        '/register': (context) => RegisterPage(),
-        '/guest': (context) => GuestPage(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/guest': (context) => const GuestPage(),
       },
     );
   }
@@ -38,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String connectionStatus = 'Unknown';
+  String ssid = 'Unknown';
   late ConnectivityResult connectivityResult;
 
   @override
@@ -47,11 +51,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _checkConnection() async {
-    List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult[0] == ConnectivityResult.wifi) {
-      setState(() {
-        connectionStatus = 'Connected';
-      });
+    List<ConnectivityResult> connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.first == ConnectivityResult.wifi) {
+      ssid = await WifiInfo().getWifiName() ?? 'Unknown';
+      if (ssid == "AndroidWifi") {
+        setState(() {
+          connectionStatus = 'Connected to expected network';
+        });
+      } else {
+        setState(() {
+          connectionStatus = 'Connected to wrong network';
+        });
+      }
     } else {
       setState(() {
         connectionStatus = 'Not Connected';
@@ -59,10 +70,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _openWiFiSettings() {
-      // WifiIotPlugin.showWiFiSettings();
-      // WiFiForIoTPlugin.showWiFiSettings();
+  Future<void> _openWiFiSettings() async {
+    if (kIsWeb || defaultTargetPlatform == TargetPlatform.iOS) {
+      const wifiSettingsUrl = 'App-Prefs:root=WIFI';
+      if (await canLaunchUrl(Uri.parse(wifiSettingsUrl))) {
+        await launchUrl(Uri.parse(wifiSettingsUrl));
+      } else {
+        throw 'Could not launch $wifiSettingsUrl';
+      }
+    } else if (defaultTargetPlatform == TargetPlatform.android) {
+      const AndroidIntent intent = AndroidIntent(
+        action: 'android.settings.WIFI_SETTINGS',
+      );
+      await intent.launch();
+    } else {
+      throw 'Platform not supported';
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,33 +109,36 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(height: 20),
-            connectionStatus == 'Connected'
-                ? Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/login');
-                        },
-                        child: const Text('Login'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/register');
-                        },
-                        child: const Text('Daftar Akun'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/guest');
-                        },
-                        child: const Text('Masuk tanpa Akun'),
-                      ),
-                    ],
-                  )
-                : ElevatedButton(
-                    onPressed: _openWiFiSettings,
-                    child: const Text('Buka Pengaturan WiFi'),
+            if (connectionStatus != 'Connected to expected network')
+              kIsWeb || defaultTargetPlatform == TargetPlatform.iOS
+                  ? const Text('Buka Pengaturan WiFi Anda secara manual')
+                  : ElevatedButton(
+                      onPressed: _openWiFiSettings,
+                      child: const Text('Buka Pengaturan WiFi'),
+                    ),
+            if (connectionStatus == 'Connected to expected network')
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    child: const Text('Login'),
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: const Text('Daftar Akun'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/guest');
+                    },
+                    child: const Text('Masuk tanpa Akun'),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
@@ -121,6 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // Halaman Login
 class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,6 +164,7 @@ class LoginPage extends StatelessWidget {
 
 // Halaman Daftar Akun
 class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,6 +180,7 @@ class RegisterPage extends StatelessWidget {
 
 // Halaman Masuk tanpa Akun
 class GuestPage extends StatelessWidget {
+  const GuestPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
