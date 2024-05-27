@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "423296475992",
+    "project_id": "signin-ordersystem1app",
+    "storage_bucket": "signin-ordersystem1app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423296475992:android:89651e978aa98fe297fb2d",
+        "android_client_info": {
+          "package_name": "com.example.flutter_order_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "423296475992-kmllfmqlskpnfdulmf4lfr8fgp1d4c8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2XEW7vm90chJJU_8t6qzujcivwmx1Hpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "423296475992-kmllfmqlskpnfdulmf4lfr8fgp1d4c8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
