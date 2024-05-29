@@ -3,11 +3,40 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+  
+  get color => null;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
+      body: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 27, left: 20, right: 20),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xff1D1617).withOpacity(0.11),
+                  blurRadius: 40,
+                  spreadRadius: 0,
+                ),
+              ]
+            ),
+            child: TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.all(15),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: BorderSide.none,
+                )
+              )
+            ),
+          ),
+        ],
+      ),
     );
   }
 
