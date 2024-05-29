@@ -56,8 +56,10 @@ class AuthService {
     }
 
     // Obtain the auth details from the request
+    // ignore: unnecessary_nullable_for_final_variable_declarations
     final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+        // await googleUser?.authentication;
+        await googleUser.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
